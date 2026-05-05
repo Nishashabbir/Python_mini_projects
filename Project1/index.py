@@ -10,7 +10,7 @@
 
 # two person will be playing , one is the user and the other is the computer 
 
-# first version of code (basic )
+# first version of code (basic )//////////////////////
 
 # def play_game():
 #     import random 
@@ -54,7 +54,7 @@
 # now here my program is working fine but i should  refactor the code , by making the improvements 
 
 
-# a little better version is here
+# a little better version is here//////////////////////////////////
 # random can also choose among the list of choices given 
 
 # import random
@@ -82,7 +82,7 @@
 
 
 
-    # third advance version to track the scores of the user and computer 
+    # third advance version to track the scores of the user and computer /////////////////////////
 import random
 
 choices = ["rock", "paper", "scissors"]

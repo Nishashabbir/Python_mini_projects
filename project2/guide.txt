@@ -1,0 +1,63 @@
+window = tk.Tk()
+
+This line creates the main application window.
+
+tk refers to the Tkinter library (usually imported like import tkinter as tk)
+Tk() creates the root window, which is the main container for your app
+window is just a variable name storing that window object
+
+👉 Think of it like: “Create the app window and store it in window.”
+
+Without this line, your GUI has no window to display anything in.
+
+2) window.title("Tic Tac Toe")
+
+This sets the title bar text of the window.
+
+"Tic Tac Toe" will appear at the top of the window (in the title bar)
+
+👉 Think of it like: naming your app window so users know what it is.
+
+Simple analogy
+tk.Tk() → creates the empty app window (like opening a blank canvas)
+title() → writes the name on top of that canvas
+
+
+
+///////////////////////////////////
+current_player = "X"
+🔹 What it does:
+Stores whose turn it is
+Why:
+
+Game logic needs to know:
+
+X plays first
+then O
+then switch back and forth 
+
+board = [""] * 9
+🔹 What it does:
+
+Creates a list with 9 empty slots:
+
+["", "", "", "", "", "", "", "", ""]
+Why 9?
+
+Because Tic Tac Toe grid is:
+
+0 1 2
+3 4 5
+6 7 8
+
+Each index represents a cell.
+
+Purpose:
+
+This is the hidden game state
+(important: UI is separate from logic)
+
+
+
+
+
