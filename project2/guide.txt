@@ -1,63 +1,774 @@
 window = tk.Tk()
-
 This line creates the main application window.
-
 tk refers to the Tkinter library (usually imported like import tkinter as tk)
 Tk() creates the root window, which is the main container for your app
 window is just a variable name storing that window object
-
-👉 Think of it like: “Create the app window and store it in window.”
-
+ Think of it like: “Create the app window and store it in window.”
 Without this line, your GUI has no window to display anything in.
-
 2) window.title("Tic Tac Toe")
-
 This sets the title bar text of the window.
-
 "Tic Tac Toe" will appear at the top of the window (in the title bar)
-
-👉 Think of it like: naming your app window so users know what it is.
-
+ Think of it like: naming your app window so users know what it is.
 Simple analogy
 tk.Tk() → creates the empty app window (like opening a blank canvas)
 title() → writes the name on top of that canvas
-
-
-
 ///////////////////////////////////
 current_player = "X"
-🔹 What it does:
+ What it does:
 Stores whose turn it is
 Why:
-
 Game logic needs to know:
-
 X plays first
 then O
 then switch back and forth 
-
 board = [""] * 9
-🔹 What it does:
-
+ What it does:
 Creates a list with 9 empty slots:
-
 ["", "", "", "", "", "", "", "", ""]
 Why 9?
-
 Because Tic Tac Toe grid is:
-
 0 1 2
 3 4 5
 6 7 8
-
 Each index represents a cell.
-
 Purpose:
-
 This is the hidden game state
 (important: UI is separate from logic)
+/////////////////////////////////////////////////
+board[a] == board[b] and board[b] == board[c] and board[a] != ""
+ Step-by-step thinking
+Let’s say:
+board = ["X","X","X","","","","","",""]
+And current combo:
+(a,b,c) = (0,1,2)
+Then:
+board[0] == board[1] == board[2] != ""
+becomes:
+"X" == "X" == "X" and "X" != ""
+ TRUE → winner found
+ Why != "" is important
+Without this:
+["", "", ""]
+would also count as a win 
+So this part ensures:
+ “Only count if it's X or O, not empty”
+/////////////////////////////////////////////////
+            return board[a]
+ What it does:
+Returns the winner ("X" or "O")
+Why board[a]?
+Because:
+all 3 are same
+so returning any one is enough
+///////////////////////////////////////////////
+board[a] == board[b] and board[b] == board[c] and board[a] != ""
+ Step-by-step thinking
+Let’s say:
+board = ["X","X","X","","","","","",""]
+And current combo:
+(a,b,c) = (0,1,2)
+Then:
+board[0] == board[1] == board[2] != ""
+becomes:
+"X" == "X" == "X" and "X" != ""
+ TRUE → winner found
+ Why != "" is important
+Without this
+["", "", ""]
+would also count as a win 
+So this part ensures:
+ “Only count if it's X or O, not empty”
+SUMMARY OF FUNCTION
+check_winner():
+loops through all win patterns
+checks if any 3 positions match
+returns:
+"X" or "O" → if winner
+None → if no winner
+PART 4 — BUTTON CLICK FUNCTION
+def click(index):
+ What this function does
+This function runs whenever a player clicks a button.
+Example:
+User clicks top-left button
+Python calls:
+click(0)
+If middle button clicked:
+click(4)
+So index tells:
+ which cell was clicked
+ GLOBAL VARIABLE
+    global current_player
+ Why this exists
+Inside functions, Python normally creates local variables.
+But here we want to modify the ORIGINAL:
+current_player
+outside the function.
+Without global, this line later:
+current_player = "O"
+would create a new temporary variable instead of changing the real game player.
+ Real-life analogy
+Think:
+current_player
+is a shared whiteboard outside the room.
+Without global, function writes on its own paper.
+With global, function edits the actual whiteboard.
+ EMPTY CELL CHECK
+    if board[index] == "":
+ Why needed
+Prevents overwriting moves.
+Example:
+X already clicked cell 0
+O should NOT replace it
+So we only allow move if cell is empty.
+ Example
+Before:
+board = ["X","","","","","","","",""]
+If player clicks index 0 again:
+board[0] == ""
+becomes:
+"X" == ""
+ False → move ignored
+ SAVE MOVE IN GAME STATE
+        board[index] = current_player
+ What this does
+Stores the move in the hidden board list.
+Example:
+current_player = "X"
+index = 4
+Result:
+board[4] = "X"
+Now internal game data updates.
+⚠ IMPORTANT CONCEPT
+This updates:
+ LOGIC / DATA
+NOT the visual button yet.
+Your game has:
+hidden state (board)
+visible UI (buttons)
+Professional apps always separate these two.
+ UPDATE BUTTON TEXT
+        buttons[index].config(text=current_player)
+ What this does
+Updates the visual button on screen.
+Example:
+buttons[4]
+means:
+ center button object
+Then:
+.config(text="X")
+changes button label to X.
+ HUGE CONCEPT HERE
+Earlier:
+buttons = []
+We stored button objects.
+Now we can access them later.
+This is why storing references is powerful.
+/////////////////////////////////////////////////////////////////////////
+Alright, continuing 
+ PART 3 — WIN CHECK LOGIC
+def check_winner():
+ What this does:
+Defines a function named check_winner.
+Why we need a function:
+Because we don’t want to repeat win-checking code everywhere.
+So instead of writing logic again and again, we just call:
+check_winner()
+ THE WINNING COMBINATIONS
+    wins = [        (0,1,2),(3,4,5),(6,7,8),        (0,3,6),(1,4,7),(2,5,8),        (0,4,8),(2,4,6)    ]
+ What this is:
+A list of all possible winning patterns in Tic Tac Toe.
+ Let’s visualize board indexes:
+0 | 1 | 23 | 4 | 56 | 7 | 8
+ Types of wins:
+1. Rows
+(0,1,2)  # top row(3,4,5)  # middle row(6,7,8)  # bottom row
+2. Columns
+(0,3,6)  # left column(1,4,7)  # middle column(2,5,8)  # right column
+3. Diagonals
+(0,4,8)  # top-left → bottom-right(2,4,6)  # top-right → bottom-left
+ WHY TUPLES?
+Because:
+They are fixed combinations
+We never change them
+So tuple (a,b,c) is perfect
+ CHECKING LOGIC
+    for a, b, c in wins:
+ What happens here:
+Loop through every winning pattern.
+Example first loop:
+a=0, b=1, c=2
+        if board[a] == board[b] == board[c] != "":
+ THIS IS THE CORE LOGIC
+It means:
+///////////////////////////////////////////////////
+Continuing the core logic 
+if board[a] == board[b] == board[c] != "":
+ What this REALLY means
+This is a chain comparison in Python.
+It is equivalent to:
+board[a] == board[b] and board[b] == board[c] and board[a] != ""
+ Step-by-step thinking
+Let’s say:
+board = ["X","X","X","","","","","",""]
+And current combo:
+(a,b,c) = (0,1,2)
+Then:
+board[0] == board[1] == board[2] != ""
+becomes:
+"X" == "X" == "X" and "X" != ""
+ TRUE → winner found
+ Why != "" is important
+Without this:
+["", "", ""]
+would also count as a win 
+So this part ensures:
+ “Only count if it's X or O, not empty”
+            return board[a]
+ What it does:
+Returns the winner ("X" or "O")
+Why board[a]?
+Because:
+all 3 are same
+so returning any one is enough
+    return None
+ What this means:
+If loop finishes and no winner found:
+ return None
+Why None?
+Means “no result yet”
+cleaner than returning random values
+ SUMMARY OF FUNCTION
+check_winner():
+loops through all win patterns
+checks if any 3 positions match
+returns:
+"X" or "O" → if winner
+None → if no winner
+ STOP HERE
+This function is the brain of your game logic.
+Without it:
+ game can't detect wins
+ Your turn
+Say “continue” and next we’ll go into:
+ click(index) function
+This is the most important part:
+user interaction
+updating UI
+switching players
+calling winner logic
+This is where everything connects together.
+////////////////////////////////////////////////////////
+Awesome.
+Now we enter the main engine of the game 
+ PART 4 — BUTTON CLICK FUNCTION
+def click(index):
+ What this function does
+This function runs whenever a player clicks a button.
+Example:
+User clicks top-left button
+Python calls:
+click(0)
+If middle button clicked:
+click(4)
+So index tells:
+ which cell was clicked
+ GLOBAL VARIABLE
+    global current_player
+ Why this exists
+Inside functions, Python normally creates local variables.
+But here we want to modify the ORIGINAL:
+current_player
+outside the function.
+Without global, this line later:
+current_player = "O"
+would create a new temporary variable instead of changing the real game player.
+ Real-life analogy
+Think:
+current_player
+is a shared whiteboard outside the room.
+Without global, function writes on its own paper.
+With global, function edits the actual whiteboard.
+ EMPTY CELL CHECK
+    if board[index] == "":
+ Why needed
+Prevents overwriting moves.
+Example:
+X already clicked cell 0
+O should NOT replace it
+So we only allow move if cell is empty.
+ Example
+Before:
+board = ["X","","","","","","","",""]
+If player clicks index 0 again:
+board[0] == ""
+becomes:
+"X" == ""
+ False → move ignored
+ SAVE MOVE IN GAME STATE
+        board[index] = current_player
+ What this does
+Stores the move in the hidden board list.
+Example:
+current_player = "X"
+index = 4
+Result:
+board[4] = "X"
+Now internal game data updates.
+⚠ IMPORTANT CONCEPT
+This updates:
+ LOGIC / DATA
+NOT the visual button yet.
+Your game has:
+hidden state (board)
+visible UI (buttons)
+Professional apps always separate these two.
+ UPDATE BUTTON TEXT
+        buttons[index].config(text=current_player)
+ What this does
+Updates the visual button on screen.
+Example:
+buttons[4]
+means:
+ center button object
+Then:
+.config(text="X")
+changes button label to X.
+ HUGE CONCEPT HERE
+Earlier:
+buttons = []
+We stored button objects.
+Now we can access them later.
+This is why storing references is powerful.
+ THINK LIKE REAL PROJECTS
+This pattern exists everywhere:
+Data	UI
+database	webpage
+state	components
+variables	visuals
+You:
+update data
+then update interface
+That’s how professional apps work too.
+ CHECK FOR WINNER
+        winner = check_winner()
+ What this does
+Calls the function you made earlier.
+It returns:
+"X"
+"O"
+or None
+Then stores result in:
+winner
+ Example
+If X wins:
+winner = "X"
+If nobody wins:
+winner = None
+        if winner:
+ Important Python behavior
+In Python:
+None
+is considered FALSE.
+And non-empty strings like:
+"X"
+are TRUE.
+So:
+if winner:
+means:
+ “if winner exists”
+ SHOW POPUP
+            messagebox.showinfo("Game Over", f"Player {winner} wins!")
+ What this does
+Shows popup window.
+Example:
+Player X wins!
+ F-STRING
+f"Player {winner} wins!"
+ Why f
+Allows inserting variables inside text.
+Example:
+winner = "X"
+becomes:
+"Player X wins!"
+ RESET GAME
+            reset_game()
+Runs reset function after win.
+            return
+ VERY IMPORTANT
+Stops the function immediately.
+Without this:
+code below would still continue running.
+That could:
+switch players incorrectly
+continue game after winning
+//////////////////////////////////////////////////////////////////////////
+PART 5 — DRAW CHECK
+        if "" not in board:
+ What this means
+It checks:
+ “Are there NO empty spaces left?”
+ Understanding it slowly
+Remember:
+board = [""] * 9
+Initially:
+["", "", "", "", "", "", "", "", ""]
+Empty string "" means:
+ empty cell
+During game
+Example:
+["X","O","X",
+ "X","O","O",
+ "O","X","X"]
+Now:
+"" not in board
+becomes:
+True
+because no empty spots remain.
+ Why needed
+If:
+board full
+AND no winner
+then game is draw.
+            messagebox.showinfo("Game Over", "It's a draw!")
+Shows draw popup.
+            reset_game()
+            return
+Again:
+reset board
+stop function immediately
+ PLAYER SWITCHING
+        current_player = "O" if current_player == "X" else "X"
+ THIS IS A TERNARY OPERATOR
+A compact shortcut version of:
+if current_player == "X":
+    current_player = "O"
+else:
+    current_player = "X"
+ Read it like English
+"O" if current_player == "X" else "X"
+means:
+ “Use O if current player is X, otherwise use X”
+ Example 1
+Current:
+current_player = "X"
+Then:
+current_player == "X"
+ True
+So result:
+current_player = "O"
+ Example 2
+Current:
+current_player = "O"
+Condition becomes false.
+So:
+current_player = "X"
+ WHY THIS IS COOL
+This is very common in real projects:
+compact decision making
+assigning values based on condition
+ PART 6 — RESET FUNCTION
+def reset_game():
+Creates function to restart game.
+    global board, current_player
+Again:
+we want to modify original variables.
+    board = [""] * 9
+Creates fresh empty board again.
+    current_player = "X"
+Always restart with X.
+ RESET BUTTONS VISUALLY
+    for btn in buttons:
+Loop through every button object stored earlier.
+Example mentally
+buttons list contains:
+[
+ button1,
+ button2,
+ button3,
+ ...
+]
+Loop gives one button at a time.
+        btn.config(text="")
+Clears button text visually.
+⚠ IMPORTANT AGAIN
+Notice:
+board reset = hidden data
+button reset = visible UI
+Professional apps always synchronize:
+state
+interface
+ PART 7 — CREATE BUTTON GRID
+Now comes the GUI generation magic.
+for i in range(9):
+Loop 9 times:
+0 → 8
+because Tic Tac Toe has 9 cells.
+ CREATE BUTTON
+    btn = tk.Button(
+Creates one button object.
+ Parent container
+        window,
+Means:
+ place button inside main window.
+        text="",
+Initially empty.
+        font=("Arial", 24),
+Font:
+Arial
+size 24
+        width=5,
+        height=2,
+Button size.
+ MOST IMPORTANT LINE COMING
+        command=lambda i=i: click(i)
+This is advanced beginner-level Python magic.
+ FIRST:
+What is command= ?
+It tells button:
+ “What should happen when clicked?”
+Example:
+command=my_function
+means:
+run function on click.
+ Problem Here
+We need:
+each button
+to send its own index
+Example:
+top-left button → click(0)
+center → click(4)
+ Why THIS fails
+command=click(i)
+Because it runs immediately during creation,
+NOT when clicked.
+ So we use lambda
+lambda: click(i)
+means:
+ “create tiny anonymous function”
+NOT run now,
+run later on click.
+⚠ BUT THERE IS ANOTHER PROBLEM
+Without:
+i=i
+ALL buttons would use final value:
+8
+This is because lambda remembers variable reference, not current value.
+ So THIS fixes it:
+lambda i=i: click(i)
+Meaning:
+ “store current i value permanently”
+ Real Example
+During loop:
+Iteration 1:
+i = 0
+stores:
+lambda i=0: click(0)
+Iteration 2:
+i = 1
+stores:
+lambda i=1: click(1)
+etc.
+ WITHOUT THIS
+Every button becomes:
+click(8)
+This is a famous beginner bug.
+ GRID POSITIONING
+    btn.grid(row=i//3, column=i%3)
+This places buttons into 3×3 layout.
+ i//3
+Integer division.
+Example:
+i	i//3
+0	0
+1	0
+2	0
+3	1
+4	1
+Controls row.
+ i%3
+Remainder operator.
+Example:
+i	i%3
+0	0
+1	1
+2	2
+3	0
+Controls column.
+ Final grid
+i	row	col
+0	0	0
+1	0	1
+2	0	2
+3	1	0
+etc.
+ STORE BUTTON
+    buttons.append(btn)
+Adds button object into list.
+Why?
+So later we can do:
+buttons[index].config(...)
+ FINAL PART
+window.mainloop()
+ MOST IMPORTANT TKINTER LINE
+Starts application event loop.
+ What is event loop?
+Program keeps waiting for events:
+mouse clicks
+keyboard input
+window actions
+Without this:
+window appears and instantly closes.
+ COMPLETE FLOW OF YOUR GAME
+Startup
+create window
+create board data
+create buttons
+start loop
+Player clicks
+button calls click(index)
+board updates
+UI updates
+winner checked
+draw checked
+player switched
+Game ends
+popup shown
+reset function runs
+board + UI cleared
+You just learned:
+GUI architecture
+state management
+callbacks
+lambda
+event loops
+grid systems
+ternary operators
+references
+synchronization between UI and logic
+These concepts appear in:
+React
+games
+desktop apps
+mobile apps
+web dashboards
+professional software everywhere.
+//////////////////////////////////////////////////
+btn.grid(row=i//3, column=i%3)
+Excellent question.
+This line is what actually arranges the buttons into a 3×3 Tic Tac Toe board.
+Without it:
+ all buttons would either overlap or not appear properly.
+ FIRST — What is .grid() ?
+Tkinter has layout systems.
+.grid() is one of them.
+It places elements in a table-like structure:
+row 0 →  [ ] [ ] [ ]
+row 1 →  [ ] [ ] [ ]
+row 2 →  [ ] [ ] [ ]
+Think of it like Excel cells.
+ What are row and column ?
+They are parameters telling tkinter:
+row = vertical position
+column = horizontal position
+ VISUAL UNDERSTANDING
+(row=0, column=0)   (0,1)   (0,2)
+(row=1, column=0)   (1,1)   (1,2)
+(row=2, column=0)   (2,1)   (2,2)
+ So this line:
+btn.grid(row=i//3, column=i%3)
+calculates:
+which row button belongs to
+which column button belongs to
+automatically.
+ WHY NOT MANUALLY?
+Without loop logic you'd need:
+button1.grid(row=0,column=0)
+button2.grid(row=0,column=1)
+button3.grid(row=0,column=2)
+...
+Very repetitive.
+So we use math to calculate positions automatically.
+ UNDERSTANDING i//3
+// means integer division
+Example:
+0//3 = 0
+1//3 = 0
+2//3 = 0
+3//3 = 1
+4//3 = 1
+5//3 = 1
+Why useful?
+Every 3 buttons should move to next row.
+Result:
+i	i//3	row
+0	0	top row
+1	0	top row
+2	0	top row
+3	1	middle row
+4	1	middle row
+5	1	middle row
+ UNDERSTANDING i%3
+% means remainder
+Example:
+0%3 = 0
+1%3 = 1
+2%3 = 2
+3%3 = 0
+4%3 = 1
+5%3 = 2
+Why useful?
+Columns repeat:
+0 1 2
+0 1 2
+0 1 2
+ FULL TABLE
+i	row=i//3	col=i%3
+0	0	0
+1	0	1
+2	0	2
+3	1	0
+4	1	1
+5	1	2
+6	2	0
+7	2	1
+8	2	2
+ FINAL RESULT
+This math converts:
+0 → 8
+into:
+(0,0) (0,1) (0,2)
+(1,0) (1,1) (1,2)
+(2,0) (2,1) (2,2)
+which forms the Tic Tac Toe board automatically.
+ IMPORTANT PROGRAMMER THINKING
+This is a powerful concept:
+ Convert 1D data into 2D layout using math.
+This appears everywhere:
+games
+grids
+dashboards
+image processing
+matrices
+chess boards
+spreadsheets
+Professional developers think like this constantly.
 
 
+But showinfo() needs 2 arguments:
 
+showinfo(title, message)
 
+So fix both message boxes like this:
 
+messagebox.showinfo(
+    "Game Over",
+    f"The player {current_player} wins!"
+)
+
+and:
+
+messagebox.showinfo(
+    "Draw",
+    "The match is draw!"
+)

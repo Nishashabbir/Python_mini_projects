@@ -73,3 +73,20 @@ for i in range(9):
 
 # ---------------- RUN APP ----------------
 window.mainloop()
+
+
+# flow of app 
+# first created buttons and then organized them into 3X3 grid , then appended them to the list of buttons 
+# after creating buttons , on every click these activities happen , if btn was clicked and it was not allocated ,
+#  put current player there , make the text visible through UI ,
+ 
+# check the winner if or not , and update the current player , reset at win or lose , 
+# two things are important , buttons in which UI is stored and board in which seats or indices are 
+
+
+
+
+
+
+
+
