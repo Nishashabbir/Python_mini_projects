@@ -1,0 +1,196 @@
+This project is VERY important because now you’re learning:
+real-time updating
+recursion/event scheduling
+GUI refreshing
+callbacks
+dynamic UI
+This is where GUI programming starts becoming “alive”.
+We’ll go slowly again.
+ FIRST COMMENT
+# we are going to make it user friendly through GUI , using tkinter library
+This is just a comment.
+Python ignores it.
+Purpose:
+ explain code for humans.
+ IMPORTS
+import tkinter as tk
+Same as before.
+Imports GUI library and gives nickname:
+tk
+from time import strftime
+ NEW THING
+Imports only:
+strftime
+from Python’s time module.
+ WHAT IS strftime ?
+It means:
+string format time
+It converts current time into formatted text.
+ EXAMPLE
+strftime("%H:%M:%S")
+might produce:
+14:32:08
+ WINDOW CREATION
+window = tk.Tk()
+Creates main application window.
+window.title("Digital Clock")
+Sets top title bar text.
+ NOW THE MOST IMPORTANT PART
+def time():
+Creates function named:
+time
+This function is responsible for:
+getting current time
+updating label
+repeating forever
+ GETTING CURRENT TIME
+string = strftime('%H:%M:%S %p \n %D')
+ BREAKING FORMAT DOWN
+%H
+24-hour hour:
+00 → 23
+%M
+Minutes
+%S
+Seconds
+%p
+AM / PM
+\n
+New line
+Means:
+go to next line
+%D
+Date
+Example:
+05/10/26
+ Example Final Output
+14:30:52 PM
+05/10/26
+ LABEL UPDATE
+label.config(text=string)
+What this does
+Updates label text dynamically.
+ IMPORTANT
+Earlier:
+label
+was created as a GUI object.
+Now:
+.config()
+modifies its properties.
+ Think of config like:
+ “change settings of existing object”
+ Example
+Before:
+12:01:10
+After 1 second:
+12:01:11
+This line updates visible text.
+ MOST IMPORTANT LINE OF ENTIRE PROGRAM
+label.after(1000, time)
+THIS is the heart of live updating.
+ WHAT IS .after() ?
+Means:
+ “Run something later after some milliseconds”
+ Syntax
+widget.after(delay, function)
+ HERE:
+1000
+means:
+1000 milliseconds = 1 second
+ SO THIS MEANS:
+label.after(1000, time)
+ “After 1 second, run time() again”
+ THIS CREATES AN INFINITE UPDATE LOOP
+Flow:
+time()
+   ↓
+update label
+   ↓
+wait 1 second
+   ↓
+time()
+   ↓
+update label
+   ↓
+wait 1 second
+forever.
+ THIS IS EXTREMELY IMPORTANT
+The clock is NOT updating automatically magically.
+YOU manually told tkinter:
+run this function again and again
+using .after().
+ VERY IMPORTANT THINKING
+This is a type of:
+scheduled callback
+Used everywhere:
+clocks
+animations
+games
+notifications
+auto-refresh systems
+live dashboards
+ LABEL CREATION
+label = tk.Label(
+Creates text label GUI object.
+window,
+Put label inside window.
+font=('calibari', 50, 'bold')
+Font settings:
+font family
+size
+style
+background="Green"
+foreground="white"
+Colors:
+background = green
+text color = white
+ PACK
+label.pack(anchor='center')
+Places label into window.
+ WHAT IS .pack() ?
+Another layout manager.
+Unlike .grid(),
+pack() is simpler.
+It stacks widgets.
+ anchor='center'
+Means:
+ keep widget centered.
+ VERY IMPORTANT FLOW NOW
+time()
+This starts the clock for FIRST TIME.
+ Why needed?
+Because .after() only schedules FUTURE calls.
+You still need first manual call.
+ FLOW
+time() called once manually
+    ↓
+updates label
+    ↓
+.after() schedules next call
+    ↓
+time() runs again
+    ↓
+repeats forever
+ FINAL LINE
+window.mainloop()
+Starts tkinter event loop.
+Keeps app alive waiting for events/timers.
+
+Note: //////////////////////////////////////////
+Tkinter Layout Managers
+
+Tkinter has multiple systems to place widgets:
+
+Method	Purpose
+.pack()	simple layout
+.grid()	row/column layout
+.place()	exact x/y position
+ YOU MUST USE ONE OF THEM
+
+Without:
+
+.pack()
+.grid()
+or .place()
+
+ widget stays invisible.
