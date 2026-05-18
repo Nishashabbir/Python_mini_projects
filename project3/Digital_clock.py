@@ -16,7 +16,7 @@ label= tk.Label(window, font=('calibari' , 50 , 'bold') , background="Green" , f
 label.pack(anchor='center') #here we used pack becuase to visually show the label that we created 
 
 time()
-window.mainloop()
+window.mainloop() #this will run our app 
     
 
 
