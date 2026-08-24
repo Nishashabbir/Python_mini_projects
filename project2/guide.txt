@@ -1,10 +1,12 @@
 window = tk.Tk()
+
 This line creates the main application window.
 tk refers to the Tkinter library (usually imported like import tkinter as tk)
 Tk() creates the root window, which is the main container for your app
 window is just a variable name storing that window object
  Think of it like: “Create the app window and store it in window.”
 Without this line, your GUI has no window to display anything in.
+
 2) window.title("Tic Tac Toe")
 This sets the title bar text of the window.
 "Tic Tac Toe" will appear at the top of the window (in the title bar)
@@ -13,6 +15,7 @@ Simple analogy
 tk.Tk() → creates the empty app window (like opening a blank canvas)
 title() → writes the name on top of that canvas
 ///////////////////////////////////
+
 current_player = "X"
  What it does:
 Stores whose turn it is

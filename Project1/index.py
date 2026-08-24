@@ -4,7 +4,10 @@
 # scissors beat paper
 # paper beats rock 
 # two person will be playing , one is the user and the other is the computer 
-# first version of code (basic )//////////////////////
+
+
+# first version of code (basic )         ////////////////////////////////////////////////
+
 # def play_game():
 #     import random 
 #     computer_input=random.randint(1 ,3)
@@ -15,6 +18,7 @@
 #         computer="paper"
 #     else:
 #         computer="scissors"
+
 #     # instead that you can also choose among the list of strings like that 
 #     # computer=random.choice(["rock " , "paper" , "scissors"])
 #     user=input("Enter one of the following rock/paper/scissors :")
@@ -24,7 +28,7 @@
 #         print("You won , rock beats scissors")
 #     elif user=="rock" and computer=="paper":
 #         print("YOu lost! as paper beats rock ")
-#     elif user=="scissors" and computer=="rock":
+#     elif user=="scissors" and computer=="rock": 
 #         print("Computer Won! as scissor is beaten by rock ")
 #     elif user=="scissors" and computer=="paper":
 #         print("You Won! as scissor beats paper ")
@@ -33,8 +37,12 @@
 #     elif user=="paper" and computer=="rock":
 #         print("You won  Won! as paper beats rock  ")
 # play_game()
+
 # now here my program is working fine but i should  refactor the code , by making the improvements 
-# a little better version is here//////////////////////////////////
+
+
+# Second Version              /////////////////////////////////////////////////
+
 # random can also choose among the list of choices given 
 # import random
 # choices = ["rock", "paper", "scissors"]
@@ -51,7 +59,11 @@
 #     print("You win!")
 # else:
 #     print("You lose!")
+
     # third advance version to track the scores of the user and computer /////////////////////////
+
+# validate the input 
+
 # import random
 # choices = ["rock", "paper", "scissors"]
 # def get_user_choice():
@@ -61,8 +73,10 @@
 #             return user
 #         else:
 #             print("Invalid input! Try again.")
+
 # def get_computer_choice():
 #     return random.choice(choices)
+
 # def decide_winner(user, computer):
 #     if user == computer:
 #         return "tie"
